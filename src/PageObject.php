@@ -2,12 +2,17 @@
 
 namespace xltxlm\page;
 
+use xltxlm\helper\Hclass\ObjectToArray;
+
 /**
  * 分页类，根据参数，计算出分页结构
  * Class page.
  */
 final class PageObject
 {
+    /** @var int 显示的分页条数目 */
+    protected $pageadd = 5;
+    use ObjectToArray;
     /** @var int 显示的最小分页条数目 */
     private $min = 1;
     /** @var int 显示的最大分页条数目 */
@@ -29,13 +34,32 @@ final class PageObject
     private $limitSql = '';
 
     /**
+     * @return int
+     */
+    public function getPageadd(): int
+    {
+        return $this->pageadd;
+    }
+
+    /**
+     * @param int $pageadd
+     * @return PageObject
+     */
+    public function setPageadd(int $pageadd): PageObject
+    {
+        $this->pageadd = $pageadd;
+        return $this;
+    }
+
+
+    /**
      * 当前条数从第几条开始算起.
      *
      * @return int
      */
     public function getFrom()
     {
-        return $this->from = ($this->pageID - 1) * $this->prepage;
+        return $this->from = (int)($this->pageID - 1) * $this->prepage;
     }
 
     /**
@@ -154,11 +178,10 @@ final class PageObject
         $total = intval($this->total);
         $this->pages = (int)max(1, abs(ceil(($total / $this->prepage))));
         $this->pageID = (int)min(max($this->pageID, 1), $this->pages); //2
-        $pageadd = 5;
         //每次最多显示多少页目
-        $num = ceil($pageadd / 2);
-        $this->max = min(max($this->pageID + $num, $pageadd), $this->pages);
-        $this->min = max(min($this->pageID - $num, $this->pages - $pageadd), 1);
+        $num = ceil($this->pageadd / 2);
+        $this->max = min(max($this->pageID + $num, $this->pageadd), $this->pages);
+        $this->min = max(min($this->pageID - $num, $this->pages - $this->pageadd), 1);
 
         $this->setLimitSql(' LIMIT '.$this->getFrom().", $this->prepage ");
 
