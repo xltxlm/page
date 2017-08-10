@@ -121,7 +121,9 @@ final class PageObject
      */
     public function setPrepage(int $prepage): PageObject
     {
-        $this->prepage = $prepage;
+        if ($prepage > 0) {
+            $this->prepage = $prepage;
+        }
 
         return $this;
     }
@@ -183,7 +185,7 @@ final class PageObject
         $this->max = min(max($this->pageID + $num, $this->pageadd), $this->pages);
         $this->min = max(min($this->pageID - $num, $this->pages - $this->pageadd), 1);
 
-        $this->setLimitSql(' LIMIT '.$this->getFrom().", $this->prepage ");
+        $this->setLimitSql(' LIMIT ' . $this->getFrom() . ", $this->prepage ");
 
         return $this;
     }
