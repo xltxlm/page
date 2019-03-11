@@ -179,7 +179,8 @@ final class PageObject
     {
         $total = intval($this->total);
         $this->pages = (int)max(1, abs(ceil(($total / $this->prepage))));
-        $this->pageID = (int)min(max($this->pageID, 1), $this->pages); //2
+        //$this->pageID = (int)min(max($this->pageID, 1), $this->pages); //2
+        $this->pageID = max($this->pageID, 1);
         //每次最多显示多少页目
         $num = ceil($this->pageadd / 2);
         $this->max = min(max($this->pageID + $num, $this->pageadd), $this->pages);
